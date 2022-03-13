@@ -3,6 +3,12 @@ let index = {
 		$("#btn-save").on("click", () => { // function(){} 대신에 () =>{} 사용 이유는 this를 바인딩하기 위해서 사용하는 것
 			this.save();
 		});
+		$("#btn-delete").on("click", () => {
+			this.deleteById();
+		});
+		$("#btn-update").on("click", () => {
+			this.update();
+		});
 	},
 
 	save: function() {
@@ -16,11 +22,48 @@ let index = {
 			// 회원가입 수행 요청
 			type: "POST",
 			url: "/api/board",
-			data: JSON.stringify(data), 
-			contentType: "application/json; charset=utf-8", 
-			dataType: "json" 
+			data: JSON.stringify(data),
+			contentType: "application/json; charset=utf-8",
+			dataType: "json"
 		}).done(function(resp) {
 			alert("글쓰기가 완료되었습니다.");
+			location.href = "/";
+		}).fail(function(error) {
+			alert(JSON.stringify(error));
+		});
+	},
+
+	deleteById: function() {
+		let id = $("#id").text();
+
+		$.ajax({
+			type: "DELETE",
+			url: "/api/board/" + id,
+			dataType: "json"
+		}).done(function(resp) {
+			alert("삭제가 완료되었습니다.");
+			location.href = "/";
+		}).fail(function(error) {
+			alert(JSON.stringify(error));
+		});
+	},
+	update: function() {
+		let id = $("#id").val();
+		
+		
+		let data = {
+			title: $("#title").val(),
+			content: $("#content").val()
+		};
+
+		$.ajax({
+			type: "PUT",
+			url: "/api/board/" + id,
+			data: JSON.stringify(data),
+			contentType: "application/json; charset=utf-8",
+			dataType: "json"
+		}).done(function(resp) {
+			alert("글수정이 완료되었습니다.");
 			location.href = "/";
 		}).fail(function(error) {
 			alert(JSON.stringify(error));
